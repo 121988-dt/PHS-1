@@ -32,7 +32,7 @@ send("command", 5)
 send("takeoff", 5)
 send("stop", 5)
 
-#def makePedals ();
+#def makePedals ():
     curve(64,102,0,0,229,0,60);
     curve(-64,-102,0,0,-229,0,60);
     
@@ -42,7 +42,19 @@ send("stop", 5)
     curve(-102,-64,0,-229,0,0,60);
     curve(-102,-64,0,-229,0,0,60);
     curve(102,64,0,229,0,0,60);
-
+    
+#def finishProgram ():
+    right(12)
+    curve(15,15,0,0,25,0,60)
+    curve(-15,-15,0,0,-25,0,60)
+    left(12)
+    flip("r")
+    up(20)
+    flip("l")
+    down(20)
+    flip("f")
+    up(20)
+    flip("b")
 
 # Land
 send("land", 5)
