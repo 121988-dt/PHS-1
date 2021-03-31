@@ -48,16 +48,16 @@ class Waypoint:
         return    
 
 #sample waypoint list of 10 waypoints
-waypoint1 = Waypoint(30, 30, 40, 'A')
-waypoint2 = Waypoint(0, -20, 40, 'B')
-waypoint3 = Waypoint(10, 10, 40, 'C')
-waypoint4 = Waypoint(0, -20, 20, 'D')
-waypoint5 = Waypoint(20, 10, 20, 'A')
-waypoint6 = Waypoint(10, 90, 40, 'B')
-waypoint7 = Waypoint(40, 80, 40, 'C')
-waypoint8 = Waypoint(30, 30, 40, 'D')
-waypoint9 = Waypoint(50, 40, 70, 'A')
-waypoint10 = Waypoint(0, 50, 60, 'B')
+#waypoint1 = Waypoint(30, 30, 40, 'A')
+#waypoint2 = Waypoint(0, -20, 40, 'B')
+#waypoint3 = Waypoint(10, 10, 40, 'C')
+#waypoint4 = Waypoint(0, -20, 20, 'D')
+#waypoint5 = Waypoint(20, 10, 20, 'A')
+#waypoint6 = Waypoint(10, 90, 40, 'B')
+#waypoint7 = Waypoint(40, 80, 40, 'C')
+#waypoint8 = Waypoint(30, 30, 40, 'D')
+#waypoint9 = Waypoint(50, 40, 70, 'A')
+#waypoint10 = Waypoint(0, 50, 60, 'B')
 
 #wpList = [waypoint1]
 #wpList = [waypoint1, waypoint2]
@@ -68,7 +68,7 @@ waypoint10 = Waypoint(0, 50, 60, 'B')
 #wpList = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7]
 #wpList = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8]
 #wpList = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9]
-wpList = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9, waypoint10]
+#wpList = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9, waypoint10]
 
 ###################Waypoint Legnth We will need to use this value tell us how many points go in our arrey
 numberofwaypoints = len(wpList)
@@ -342,15 +342,36 @@ send("command", 5)
 send("takeoff", 5)
 send("stop", 5)
 
-#Works great when i type in values for the x y z
-send("go 30 30 30 50", 5)
+def waypointA():
+    send("stop" + str(5))
 
-#cannot get this to work with variables
-send("go " + str(x1) + str(x2) + str(x3), 50, 5)
+def waypointB():
+    send("streamon")
+    send("cw" + str(360),5)
+    send("streamoff")
 
-send("go 30 30 30 50", 5)
-send("curve 25, -25, 0, 25, -75, 0, 20", 7)
-send("curve 100, 100, 0, 200, 0, 0, 20", 7)
+def waypointC():
+    send("flip" + str(f),5)
+    send("flip" + str(b),5)
+
+def waypointD():
+    radius = 10
+    photo_count = 20
+    angle_increment = 360 + photo_count
+    x1 = radius
+    y1 = 0
+    x2 = cos(angle_increment)*radius
+    y2 = sin(angle_increment)*radius 
+    distance = ((x2-x1)**2+(y2-y1)**2)**(1/2)
+    send("forward" + str(radius),5)
+    send("cw" + str(180),5)
+    time = 1
+    while time < photo_count:
+        send("stop"+ str(1))
+        send("ccw" + str(angle_increment),5)
+        send("right" + str(distance),5)
+        time = time + 1
+
 
 
 # Land
