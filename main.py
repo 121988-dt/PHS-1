@@ -19,7 +19,7 @@ def main_function(waypoints, sock):
     # https://learn.droneblocks.io/p/tello-drone-programming-with-python/
 
     # Sets delay value after certain commands are sent to tello
-    delay = 0
+    delay = 5
 
     # Run Mission A
     mission_A(delay)
