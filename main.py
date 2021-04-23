@@ -7,22 +7,36 @@
 import socket
 import threading
 import time
-import numpy as np
-import sys
 import matplotlib.pyplot as plt
-import scipy as sp
 from Code.waypoint_class import Waypoint
 
+# EDIT HERE
+def main_function(waypoints, sock):
+    # Insert your functions here. If you want to import additional functions that you've created, feel free to do so. However, make sure the
+    # file paths still
+    # This example script demonstrates how to use Python to fly Tello in a box mission
+    # This script is part of our course on Tello drone programming
+    # https://learn.droneblocks.io/p/tello-drone-programming-with-python/
 
-def mission_A(waypoints, sock):
-    # Set up 3 axies chart
+    # Sets delay value after certain commands are sent to tello
+    delay = 0
+
+    # Run Mission A
+    mission_A(delay)
+
+    # Run mission B
+    mission_B(waypoints, delay)
+
+    return
+
+def mission_A(delay):
+    # Set up 3d chart
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
     # XYZ data to be graphed
     X = [0, 0, -25, -25, 0, 0, 25, 25, 0, 0, 40, 130, 90, 0, -40, -130, -90, 0, 0, 15, 15, 0, 0, 0, 0, 0, 0, 0]
-    Y = [0, 0, 40, 130, 90, 0, -40, -130, -90, 0, 25, 25, 0, 0, -25, -25, 0, 0, -12.5, 2.5, 27.5, 12.5, -12.5, 0, 0, 0,
-         0, 0]
+    Y = [0, 0, 40, 130, 90, 0, -40, -130, -90, 0, 25, 25, 0, 0, -25, -25, 0, 0, -12.5, 2.5, 27.5, 12.5, -12.5, 0, 0, 0, 0, 0]
     Z = [0, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 40, 20, 40, 0]
 
     # Make 3D plot of origonal XYZ data
@@ -32,87 +46,88 @@ def mission_A(waypoints, sock):
     plt.show()
 
     # Put Tello into command mode
-    send("command", 5)
+    send("command", delay)
 
     # Send the takeoff command
-    send("takeoff", 5)
+    send("takeoff", delay)
+
+    send("stop", delay)
 
     # Fly in 4 leaf clover
     send(
         "curve " + str(25) + " " + str(40) + " " + str(0) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(60),
-        5)
+        delay)
     send("curve " + str(-25) + " " + str(-40) + " " + str(0) + " " + str(0) + " " + str(-90) + " " + str(0) + " " + str(
-        60), 5)
+        60), delay)
     send("curve " + str(25) + " " + str(-40) + " " + str(0) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(
-        60), 5)
+        60), delay)
     send("curve " + str(-25) + " " + str(40) + " " + str(0) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(
-        60), 5)
+        60), delay)
     send(
         "curve " + str(40) + " " + str(25) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(0) + " " + str(60),
         5)
     send("curve " + str(-40) + " " + str(-25) + " " + str(0) + " " + str(-90) + " " + str(0) + " " + str(0) + " " + str(
-        60), 5)
+        60), delay)
     send("curve " + str(-40) + " " + str(-25) + " " + str(0) + " " + str(-90) + " " + str(0) + " " + str(0) + " " + str(
-        60), 5)
+        60), delay)
     send(
-        "curve " + str(40) + " " + str(25) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(0) + " " + str(60),
-        5)
+        "curve " + str(40) + " " + str(25) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(0) + " " + str(60), delay)
 
     # Make 4 leaf clover into a flower
-    send("right " + str(12.5), 5)
+    send("right " + str(12.5), delay)
     send(
-        "curve " + str(15) + " " + str(15) + " " + str(0) + " " + str(0) + " " + str(25) + " " + str(0) + " " + str(60),
-        5)
+        "curve " + str(15) + " " + str(15) + " " + str(0) + " " + str(0) + " " + str(25) + " " + str(0) + " " + str(60), delay)
     send("curve " + str(-15) + " " + str(-15) + " " + str(0) + " " + str(0) + " " + str(-25) + " " + str(0) + " " + str(
-        60), 5)
-    send("left " + str(12.5), 5)
-    send("flip " + str("r"), 5)
-    send("up " + str(20), 5)
-    send("flip " + str("l"), 5)
-    send("down " + str(20), 5)
-    send("flip " + str("f"), 5)
-    send("up " + str(20), 5)
-    send("flip " + str("b"), 5)
+        60), delay)
+    send("left " + str(12.5), delay)
+    send("flip " + str("r"), delay)
+    send("up " + str(20), delay)
+    send("flip " + str("l"), delay)
+    send("down " + str(20), delay)
+    send("flip " + str("f"), delay)
+    send("up " + str(20), delay)
+    send("flip " + str("b"), delay)
 
     # Land
-    send("land")
+    send("land", delay)
 
     # Print message
     print("Mission completed successfully!")
+
     return
 
 
-def mission_B(waypoints, sock):
+def mission_B(waypoints, delay):
+
     def waypointA():
-        send("stop", 5)
+        send("stop", delay)
 
     def waypointB():
-        send("streamon", 5)
-        send("cw " + str(360), 5)
-        send("streamoff", 5)
+        send("streamon", delay)
+        send("cw " + str(360), delay)
+        send("streamoff", delay)
 
     def waypointC():
-        send("flip " + str('f'), 5)
-        send("flip " + str('b'), 5)
+        send("flip " + str('f'), delay)
+        send("flip " + str('b'), delay)
 
     def waypointD():
         radius = 78.74  # 2 meters converted into inches
         photo_count = 12  # Break circle up into a 12 sided hexagon
-        send("forward " + str(radius), 5)  # Fly 2 meters away from waypoint
-        send("cw " + str(180), 5)  # face camera towards waypoint
-        send("streamon", 5)  # Turn on camera
-        send("right " + str(20.3795), 5)  # Fly right 1/2 of a side of the hexagon
+        send("forward " + str(radius), delay)  # Fly 2 meters away from waypoint
+        send("cw " + str(180), delay)  # face camera towards waypoint
+        send("streamon", delay)  # Turn on camera
+        send("right " + str(20.3795), delay)  # Fly right 1/2 of a side of the hexagon
         time = 1
         while time < photo_count:  # turn and rotate around waypoint with cemera facing waypoint
-            send("ccw " + str(30), 5)
-            send("right " + str(40.759), 5)
+            send("ccw " + str(30), delay)
+            send("right " + str(40.759), delay)
             time = time + 1
-        send("ccw " + str(30), 5)
-        send("right " + str(20.3795), 5)  # Fly back to where circle started
-        send("streamoff", 5)  # Turn off camera
-        send("forward " + str(radius), 5)  # Fly back to waypoint
-        send("cw " + str(180), 5)  # Turn back around
-
+        send("ccw " + str(30), delay)
+        send("right " + str(20.3795), delay)  # Fly back to where circle started
+        send("streamoff", delay)  # Turn off camera
+        send("forward " + str(radius), delay)  # Fly back to waypoint
+        send("cw " + str(180), delay)  # Turn back around
 
     ###################Waypoint Legnth We will need to use this value tell us how many points go in our arrey
     numberofwaypoints = len(waypoints)
@@ -290,15 +305,15 @@ def mission_B(waypoints, sock):
         x0, y0, z0, wp0 = current_point
         for (x, y, z, WP) in points:
             distance = ((x - x0) ** 2 + (y - y0) ** 2 + (z - z0) ** 2) ** (1 / 2)  # compute distance
+
             if distance < min_distance:
                 min_distance = distance
                 closest = (x, y, z, WP)
+
         ordered.append(closest)
         points.remove(closest)
         current_point = closest
-
     ordered.append(origin)  # Appends the origin to the end of the list so the drone returns home
-    # ordered.insert(0, origin)
     print(ordered)  # Prints out the value for the ordered list of points to go to.
 
     test_list = ordered
@@ -309,29 +324,29 @@ def mission_B(waypoints, sock):
     YYY = res[1]
     ZZZ = res[2]
     WPP = res[3]
-
-    # Prints the values so you can see the X, Y, Z, Waypoints in the optimized order
-    print(XXX)
+    print(XXX)  # Prints the values so you can see the X, Y, Z, Waypoints in the optimized order
     print(YYY)
     print(ZZZ)
     print(WPP)
 
     # Modifyied order of plot
-
     ax.plot3D(XXX, YYY, ZZZ, '*-')
 
     # Show 3d plot
     plt.show()
 
     # Put Tello into command mode
-    send("command", 5)
+    send("command", delay)
 
     # Send the takeoff command
-    send("takeoff", 5)
+    send("takeoff", delay)
+
+    # Extra deley to make sure drone is ready for take off
+    send("stop", delay)
 
     # Flight plan for 1 waypoints
     if numberofwaypoints == 1:
-        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), 5)
+        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), delay)
         if WPP[1] == 'A':
             print('A')
             waypointA()
@@ -346,11 +361,11 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[1] == 'O':
             print('O')
-        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), 5)
+        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), delay)
 
     # Flight plan for 2 waypoints
     elif numberofwaypoints == 2:
-        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), 5)
+        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), delay)
         if WPP[1] == 'A':
             print('A')
             waypointA()
@@ -365,7 +380,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[1] == 'O':
             print('O')
-        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), 5)
+        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), delay)
         if WPP[2] == 'A':
             print('A')
             waypointA()
@@ -380,11 +395,11 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[2] == 'O':
             print('O')
-        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), 5)
+        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), delay)
 
     # Flight plan for 3 waypoints
     elif numberofwaypoints == 3:
-        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), 5)
+        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), delay)
         if WPP[1] == 'A':
             print('A')
             waypointA()
@@ -399,7 +414,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[1] == 'O':
             print('O')
-        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), 5)
+        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), delay)
         if WPP[2] == 'A':
             print('A')
             waypointA()
@@ -414,7 +429,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[2] == 'O':
             print('O')
-        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), 5)
+        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), delay)
         if WPP[3] == 'A':
             print('A')
             waypointA()
@@ -429,11 +444,11 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[3] == 'O':
             print('O')
-        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), 5)
+        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), delay)
 
     # Flight plan for 4 waypoints
     elif numberofwaypoints == 4:
-        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), 5)
+        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), delay)
         if WPP[1] == 'A':
             print('A')
             waypointA()
@@ -448,7 +463,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[1] == 'O':
             print('O')
-        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), 5)
+        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), delay)
         if WPP[2] == 'A':
             print('A')
             waypointA()
@@ -463,7 +478,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[2] == 'O':
             print('O')
-        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), 5)
+        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), delay)
         if WPP[3] == 'A':
             print('A')
             waypointA()
@@ -478,7 +493,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[3] == 'O':
             print('O')
-        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), 5)
+        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), delay)
         if WPP[4] == 'A':
             print('A')
             waypointA()
@@ -493,11 +508,11 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[4] == 'O':
             print('O')
-        send("go " + str(XXX[5] - XXX[4]) + " " + str(YYY[5] - YYY[4]) + " " + str(ZZZ[5] - ZZZ[4]) + " " + str(100), 5)
+        send("go " + str(XXX[5] - XXX[4]) + " " + str(YYY[5] - YYY[4]) + " " + str(ZZZ[5] - ZZZ[4]) + " " + str(100), delay)
 
     # Flight plan for 5 waypoints
     elif numberofwaypoints == 5:
-        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), 5)
+        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), delay)
         if WPP[1] == 'A':
             print('A')
             waypointA()
@@ -512,7 +527,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[1] == 'O':
             print('O')
-        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), 5)
+        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), delay)
         if WPP[2] == 'A':
             print('A')
             waypointA()
@@ -527,7 +542,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[2] == 'O':
             print('O')
-        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), 5)
+        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), delay)
         if WPP[3] == 'A':
             print('A')
             waypointA()
@@ -542,7 +557,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[3] == 'O':
             print('O')
-        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), 5)
+        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), delay)
         if WPP[4] == 'A':
             print('A')
             waypointA()
@@ -557,7 +572,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[4] == 'O':
             print('O')
-        send("go " + str(XXX[5] - XXX[4]) + " " + str(YYY[5] - YYY[4]) + " " + str(ZZZ[5] - ZZZ[4]) + " " + str(100), 5)
+        send("go " + str(XXX[5] - XXX[4]) + " " + str(YYY[5] - YYY[4]) + " " + str(ZZZ[5] - ZZZ[4]) + " " + str(100), delay)
         if WPP[5] == 'A':
             print('A')
             waypointA()
@@ -572,11 +587,11 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[5] == 'O':
             print('O')
-        send("go " + str(XXX[6] - XXX[5]) + " " + str(YYY[6] - YYY[5]) + " " + str(ZZZ[6] - ZZZ[5]) + " " + str(100), 5)
+        send("go " + str(XXX[6] - XXX[5]) + " " + str(YYY[6] - YYY[5]) + " " + str(ZZZ[6] - ZZZ[5]) + " " + str(100), delay)
 
     # Flight plan for 6 waypoints
     elif numberofwaypoints == 6:
-        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), 5)
+        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), delay)
         if WPP[1] == 'A':
             print('A')
             waypointA()
@@ -591,7 +606,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[1] == 'O':
             print('O')
-        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), 5)
+        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), delay)
         if WPP[2] == 'A':
             print('A')
             waypointA()
@@ -606,7 +621,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[2] == 'O':
             print('O')
-        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), 5)
+        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), delay)
         if WPP[3] == 'A':
             print('A')
             waypointA()
@@ -621,7 +636,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[3] == 'O':
             print('O')
-        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), 5)
+        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), delay)
         if WPP[4] == 'A':
             print('A')
             waypointA()
@@ -636,7 +651,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[4] == 'O':
             print('O')
-        send("go " + str(XXX[5] - XXX[4]) + " " + str(YYY[5] - YYY[4]) + " " + str(ZZZ[5] - ZZZ[4]) + " " + str(100), 5)
+        send("go " + str(XXX[5] - XXX[4]) + " " + str(YYY[5] - YYY[4]) + " " + str(ZZZ[5] - ZZZ[4]) + " " + str(100), delay)
         if WPP[5] == 'A':
             print('A')
             waypointA()
@@ -651,7 +666,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[5] == 'O':
             print('O')
-        send("go " + str(XXX[6] - XXX[5]) + " " + str(YYY[6] - YYY[5]) + " " + str(ZZZ[6] - ZZZ[5]) + " " + str(100), 5)
+        send("go " + str(XXX[6] - XXX[5]) + " " + str(YYY[6] - YYY[5]) + " " + str(ZZZ[6] - ZZZ[5]) + " " + str(100), delay)
         if WPP[6] == 'A':
             print('A')
             waypointA()
@@ -666,11 +681,11 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[6] == 'O':
             print('O')
-        send("go " + str(XXX[7] - XXX[6]) + " " + str(YYY[7] - YYY[6]) + " " + str(ZZZ[7] - ZZZ[6]) + " " + str(100), 5)
+        send("go " + str(XXX[7] - XXX[6]) + " " + str(YYY[7] - YYY[6]) + " " + str(ZZZ[7] - ZZZ[6]) + " " + str(100), delay)
 
     # Flight plan for 7 waypoints
     elif numberofwaypoints == 7:
-        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), 5)
+        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), delay)
         if WPP[1] == 'A':
             print('A')
             waypointA()
@@ -685,7 +700,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[1] == 'O':
             print('O')
-        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), 5)
+        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), delay)
         if WPP[2] == 'A':
             print('A')
             waypointA()
@@ -700,7 +715,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[2] == 'O':
             print('O')
-        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), 5)
+        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), delay)
         if WPP[3] == 'A':
             print('A')
             waypointA()
@@ -715,7 +730,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[3] == 'O':
             print('O')
-        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), 5)
+        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), delay)
         if WPP[4] == 'A':
             print('A')
             waypointA()
@@ -730,7 +745,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[4] == 'O':
             print('O')
-        send("go " + str(XXX[5] - XXX[4]) + " " + str(YYY[5] - YYY[4]) + " " + str(ZZZ[5] - ZZZ[4]) + " " + str(100), 5)
+        send("go " + str(XXX[5] - XXX[4]) + " " + str(YYY[5] - YYY[4]) + " " + str(ZZZ[5] - ZZZ[4]) + " " + str(100), delay)
         if WPP[5] == 'A':
             print('A')
             waypointA()
@@ -745,7 +760,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[5] == 'O':
             print('O')
-        send("go " + str(XXX[6] - XXX[5]) + " " + str(YYY[6] - YYY[5]) + " " + str(ZZZ[6] - ZZZ[5]) + " " + str(100), 5)
+        send("go " + str(XXX[6] - XXX[5]) + " " + str(YYY[6] - YYY[5]) + " " + str(ZZZ[6] - ZZZ[5]) + " " + str(100), delay)
         if WPP[6] == 'A':
             print('A')
             waypointA()
@@ -760,7 +775,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[6] == 'O':
             print('O')
-        send("go " + str(XXX[7] - XXX[6]) + " " + str(YYY[7] - YYY[6]) + " " + str(ZZZ[7] - ZZZ[6]) + " " + str(100), 5)
+        send("go " + str(XXX[7] - XXX[6]) + " " + str(YYY[7] - YYY[6]) + " " + str(ZZZ[7] - ZZZ[6]) + " " + str(100), delay)
         if WPP[7] == 'A':
             print('A')
             waypointA()
@@ -775,11 +790,11 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[7] == 'O':
             print('O')
-        send("go " + str(XXX[8] - XXX[7]) + " " + str(YYY[8] - YYY[7]) + " " + str(ZZZ[8] - ZZZ[7]) + " " + str(100), 5)
+        send("go " + str(XXX[8] - XXX[7]) + " " + str(YYY[8] - YYY[7]) + " " + str(ZZZ[8] - ZZZ[7]) + " " + str(100), delay)
 
     # Flight plan for 8 waypoints
     elif numberofwaypoints == 8:
-        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), 5)
+        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), delay)
         if WPP[1] == 'A':
             print('A')
             waypointA()
@@ -794,7 +809,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[1] == 'O':
             print('O')
-        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), 5)
+        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), delay)
         if WPP[2] == 'A':
             print('A')
             waypointA()
@@ -809,7 +824,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[2] == 'O':
             print('O')
-        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), 5)
+        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), delay)
         if WPP[3] == 'A':
             print('A')
             waypointA()
@@ -824,7 +839,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[3] == 'O':
             print('O')
-        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), 5)
+        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), delay)
         if WPP[4] == 'A':
             print('A')
             waypointA()
@@ -839,7 +854,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[4] == 'O':
             print('O')
-        send("go " + str(XXX[5] - XXX[4]) + " " + str(YYY[5] - YYY[4]) + " " + str(ZZZ[5] - ZZZ[4]) + " " + str(100), 5)
+        send("go " + str(XXX[5] - XXX[4]) + " " + str(YYY[5] - YYY[4]) + " " + str(ZZZ[5] - ZZZ[4]) + " " + str(100), delay)
         if WPP[5] == 'A':
             print('A')
             waypointA()
@@ -854,7 +869,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[5] == 'O':
             print('O')
-        send("go " + str(XXX[6] - XXX[5]) + " " + str(YYY[6] - YYY[5]) + " " + str(ZZZ[6] - ZZZ[5]) + " " + str(100), 5)
+        send("go " + str(XXX[6] - XXX[5]) + " " + str(YYY[6] - YYY[5]) + " " + str(ZZZ[6] - ZZZ[5]) + " " + str(100), delay)
         if WPP[6] == 'A':
             print('A')
             waypointA()
@@ -869,7 +884,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[6] == 'O':
             print('O')
-        send("go " + str(XXX[7] - XXX[6]) + " " + str(YYY[7] - YYY[6]) + " " + str(ZZZ[7] - ZZZ[6]) + " " + str(100), 5)
+        send("go " + str(XXX[7] - XXX[6]) + " " + str(YYY[7] - YYY[6]) + " " + str(ZZZ[7] - ZZZ[6]) + " " + str(100), delay)
         if WPP[7] == 'A':
             print('A')
             waypointA()
@@ -884,7 +899,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[7] == 'O':
             print('O')
-        send("go " + str(XXX[8] - XXX[7]) + " " + str(YYY[8] - YYY[7]) + " " + str(ZZZ[8] - ZZZ[7]) + " " + str(100), 5)
+        send("go " + str(XXX[8] - XXX[7]) + " " + str(YYY[8] - YYY[7]) + " " + str(ZZZ[8] - ZZZ[7]) + " " + str(100), delay)
         if WPP[8] == 'A':
             print('A')
             waypointA()
@@ -899,11 +914,11 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[8] == 'O':
             print('O')
-        send("go " + str(XXX[9] - XXX[8]) + " " + str(YYY[9] - YYY[8]) + " " + str(ZZZ[9] - ZZZ[8]) + " " + str(100), 5)
+        send("go " + str(XXX[9] - XXX[8]) + " " + str(YYY[9] - YYY[8]) + " " + str(ZZZ[9] - ZZZ[8]) + " " + str(100), delay)
 
     # Flight plan for 9 waypoints
     elif numberofwaypoints == 9:
-        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), 5)
+        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), delay)
         if WPP[1] == 'A':
             print('A')
             waypointA()
@@ -918,7 +933,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[1] == 'O':
             print('O')
-        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), 5)
+        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), delay)
         if WPP[2] == 'A':
             print('A')
             waypointA()
@@ -933,7 +948,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[2] == 'O':
             print('O')
-        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), 5)
+        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), delay)
         if WPP[3] == 'A':
             print('A')
             waypointA()
@@ -948,7 +963,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[3] == 'O':
             print('O')
-        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), 5)
+        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), delay)
         if WPP[4] == 'A':
             print('A')
             waypointA()
@@ -963,7 +978,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[4] == 'O':
             print('O')
-        send("go " + str(XXX[5] - XXX[4]) + " " + str(YYY[5] - YYY[4]) + " " + str(ZZZ[5] - ZZZ[4]) + " " + str(100), 5)
+        send("go " + str(XXX[5] - XXX[4]) + " " + str(YYY[5] - YYY[4]) + " " + str(ZZZ[5] - ZZZ[4]) + " " + str(100), delay)
         if WPP[5] == 'A':
             print('A')
             waypointA()
@@ -978,7 +993,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[5] == 'O':
             print('O')
-        send("go " + str(XXX[6] - XXX[5]) + " " + str(YYY[6] - YYY[5]) + " " + str(ZZZ[6] - ZZZ[5]) + " " + str(100), 5)
+        send("go " + str(XXX[6] - XXX[5]) + " " + str(YYY[6] - YYY[5]) + " " + str(ZZZ[6] - ZZZ[5]) + " " + str(100), delay)
         if WPP[6] == 'A':
             print('A')
             waypointA()
@@ -993,7 +1008,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[6] == 'O':
             print('O')
-        send("go " + str(XXX[7] - XXX[6]) + " " + str(YYY[7] - YYY[6]) + " " + str(ZZZ[7] - ZZZ[6]) + " " + str(100), 5)
+        send("go " + str(XXX[7] - XXX[6]) + " " + str(YYY[7] - YYY[6]) + " " + str(ZZZ[7] - ZZZ[6]) + " " + str(100), delay)
         if WPP[7] == 'A':
             print('A')
             waypointA()
@@ -1008,7 +1023,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[7] == 'O':
             print('O')
-        send("go " + str(XXX[8] - XXX[7]) + " " + str(YYY[8] - YYY[7]) + " " + str(ZZZ[8] - ZZZ[7]) + " " + str(100), 5)
+        send("go " + str(XXX[8] - XXX[7]) + " " + str(YYY[8] - YYY[7]) + " " + str(ZZZ[8] - ZZZ[7]) + " " + str(100), delay)
         if WPP[8] == 'A':
             print('A')
             waypointA()
@@ -1023,7 +1038,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[8] == 'O':
             print('O')
-        send("go " + str(XXX[9] - XXX[8]) + " " + str(YYY[9] - YYY[8]) + " " + str(ZZZ[9] - ZZZ[8]) + " " + str(100), 5)
+        send("go " + str(XXX[9] - XXX[8]) + " " + str(YYY[9] - YYY[8]) + " " + str(ZZZ[9] - ZZZ[8]) + " " + str(100), delay)
         if WPP[9] == 'A':
             print('A')
             waypointA()
@@ -1043,7 +1058,7 @@ def mission_B(waypoints, sock):
 
     # Flight plan for 10 waypoints
     elif numberofwaypoints == 10:
-        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), 5)
+        send("go " + str(XXX[1] - XXX[0]) + " " + str(YYY[1] - YYY[0]) + " " + str(ZZZ[1] - ZZZ[0]) + " " + str(100), delay)
         if WPP[1] == 'A':
             print('A')
             waypointA()
@@ -1058,7 +1073,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[1] == 'O':
             print('O')
-        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), 5)
+        send("go " + str(XXX[2] - XXX[1]) + " " + str(YYY[2] - YYY[1]) + " " + str(ZZZ[2] - ZZZ[1]) + " " + str(100), delay)
         if WPP[2] == 'A':
             print('A')
             waypointA()
@@ -1073,7 +1088,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[2] == 'O':
             print('O')
-        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), 5)
+        send("go " + str(XXX[3] - XXX[2]) + " " + str(YYY[3] - YYY[2]) + " " + str(ZZZ[3] - ZZZ[2]) + " " + str(100), delay)
         if WPP[3] == 'A':
             print('A')
             waypointA()
@@ -1088,7 +1103,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[3] == 'O':
             print('O')
-        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), 5)
+        send("go " + str(XXX[4] - XXX[3]) + " " + str(YYY[4] - YYY[3]) + " " + str(ZZZ[4] - ZZZ[3]) + " " + str(100), delay)
         if WPP[4] == 'A':
             print('A')
             waypointA()
@@ -1103,7 +1118,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[4] == 'O':
             print('O')
-        send("go " + str(XXX[5] - XXX[4]) + " " + str(YYY[5] - YYY[4]) + " " + str(ZZZ[5] - ZZZ[4]) + " " + str(100), 5)
+        send("go " + str(XXX[5] - XXX[4]) + " " + str(YYY[5] - YYY[4]) + " " + str(ZZZ[5] - ZZZ[4]) + " " + str(100), delay)
         if WPP[5] == 'A':
             print('A')
             waypointA()
@@ -1118,7 +1133,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[5] == 'O':
             print('O')
-        send("go " + str(XXX[6] - XXX[5]) + " " + str(YYY[6] - YYY[5]) + " " + str(ZZZ[6] - ZZZ[5]) + " " + str(100), 5)
+        send("go " + str(XXX[6] - XXX[5]) + " " + str(YYY[6] - YYY[5]) + " " + str(ZZZ[6] - ZZZ[5]) + " " + str(100), delay)
         if WPP[6] == 'A':
             print('A')
             waypointA()
@@ -1133,7 +1148,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[6] == 'O':
             print('O')
-        send("go " + str(XXX[7] - XXX[6]) + " " + str(YYY[7] - YYY[6]) + " " + str(ZZZ[7] - ZZZ[6]) + " " + str(100), 5)
+        send("go " + str(XXX[7] - XXX[6]) + " " + str(YYY[7] - YYY[6]) + " " + str(ZZZ[7] - ZZZ[6]) + " " + str(100), delay)
         if WPP[7] == 'A':
             print('A')
             waypointA()
@@ -1148,7 +1163,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[7] == 'O':
             print('O')
-        send("go " + str(XXX[8] - XXX[7]) + " " + str(YYY[8] - YYY[7]) + " " + str(ZZZ[8] - ZZZ[7]) + " " + str(100), 5)
+        send("go " + str(XXX[8] - XXX[7]) + " " + str(YYY[8] - YYY[7]) + " " + str(ZZZ[8] - ZZZ[7]) + " " + str(100), delay)
         if WPP[8] == 'A':
             print('A')
             waypointA()
@@ -1163,7 +1178,7 @@ def mission_B(waypoints, sock):
             waypointD()
         elif WPP[8] == 'O':
             print('O')
-        send("go " + str(XXX[9] - XXX[8]) + " " + str(YYY[9] - YYY[8]) + " " + str(ZZZ[9] - ZZZ[8]) + " " + str(100), 5)
+        send("go " + str(XXX[9] - XXX[8]) + " " + str(YYY[9] - YYY[8]) + " " + str(ZZZ[9] - ZZZ[8]) + " " + str(100), delay)
         if WPP[9] == 'A':
             print('A')
             waypointA()
@@ -1195,10 +1210,10 @@ def mission_B(waypoints, sock):
         elif WPP[10] == 'O':
             print('O')
         send("go " + str(XXX[11] - XXX[10]) + " " + str(YYY[11] - YYY[10]) + " " + str(ZZZ[11] - ZZZ[10]) + " " + str(
-            100), 5)
+            100), delay)
 
     # Land
-    send("land")
+    send("land", delay)
 
     # Print message
     print("Mission completed successfully!")
@@ -1206,13 +1221,6 @@ def mission_B(waypoints, sock):
     return
 
 
-def main_function(waypoints, sock):
-    # Run Mission A
-    # mission_A(waypoints, sock)
-
-    # Run mission B
-    mission_B(waypoints, sock)
-    return
 
 
 ##############################################
@@ -1233,7 +1241,7 @@ sock.bind(local_address)
 
 
 # Send the message to Tello and allow for a delay in seconds
-def send(message, delay=0):
+def send(message, delay):
     # Try to send the message otherwise print the exception
     try:
         sock.sendto(message.encode(), tello_address)
@@ -1269,8 +1277,8 @@ if __name__ == "__main__":
 
     # sample waypoint list of 10 waypoints
     waypoint1 = Waypoint(0, 20, 40, 'A')
-    waypoint2 = Waypoint(0, -20, 65, 'B')
-    waypoint3 = Waypoint(10, 10, 70, 'C')
+    waypoint2 = Waypoint(0, -20, 40, 'B')
+    waypoint3 = Waypoint(10, 10, 40, 'C')
     waypoint4 = Waypoint(0, -20, 20, 'A')
     waypoint5 = Waypoint(20, 10, 20, 'A')
     waypoint6 = Waypoint(10, 90, 40, 'B')
@@ -1280,7 +1288,7 @@ if __name__ == "__main__":
     waypoint10 = Waypoint(0, 50, 60, 'D')
 
     # waypoints = [waypoint1]
-    waypoints = [waypoint1, waypoint2]
+    # waypoints = [waypoint1, waypoint2]
     # waypoints = [waypoint1, waypoint2, waypoint3]
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4]
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5]
@@ -1288,7 +1296,7 @@ if __name__ == "__main__":
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7]
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8]
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9]
-    # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9, waypoint10]
+    waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9, waypoint10]
 
     # Execute the actual algorithm
     main_function(waypoints, sock)
