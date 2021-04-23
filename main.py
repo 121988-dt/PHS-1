@@ -8,6 +8,7 @@ import socket
 import threading
 import time
 import matplotlib.pyplot as plt
+# Deviated from example repo. Changed import statement to allow proper import of Waypoint class
 from Code.waypoint_class import Waypoint
 
 # EDIT HERE
@@ -1203,12 +1204,72 @@ def mission_B(waypoints, delay):
 
     return
 
-
-
-
 ##############################################
 # DO NOT EDIT ANYTHING BELOW HERE
 ##############################################
+
+def ex_main_function(waypoints, sock):
+
+    ##################
+    # DRAW plot first
+    ##################
+    plt.figure()
+    plt.plot([0,0,100,100,0],[0,100,100,0,0,0],'*-')
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    plt.show()
+
+    ####################
+    # Now run drone code
+    ####################
+
+    # Each leg of the box will be 100 cm. Tello uses cm units by default.
+    box_leg_distance = 100
+
+    # Yaw 90 degrees
+    yaw_angle = 90
+
+    # Yaw clockwise (right)
+    #yaw_direction = "cw"
+
+    # Put Tello into command mode
+    send("command", 3)
+
+    # Send the takeoff command
+    send("takeoff", 5)
+
+    # Fly forward
+    send("forward " + str(box_leg_distance), 4)
+
+    # Yaw right
+    send("cw " + str(yaw_angle), 3)
+
+    # Fly forward
+    send("forward " + str(box_leg_distance), 4)
+
+    # Yaw right
+    send("cw " + str(yaw_angle), 3)
+
+    # Fly forward
+    send("forward " + str(box_leg_distance), 4)
+
+    # Yaw right
+    send("cw " + str(yaw_angle), 3)
+
+    # Fly forward
+    send("forward " + str(box_leg_distance), 4)
+
+    # Yaw right
+    send("cw " + str(yaw_angle), 3)
+
+    # Land
+    send("land", 5)
+
+    # Print message
+    print("Mission completed successfully!")
+
+
+    return
 
 # IP and port of Tello
 tello_address = ('192.168.10.1', 8889)
@@ -1222,10 +1283,9 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # Bind to the local address and port
 sock.bind(local_address)
 
-
 # Send the message to Tello and allow for a delay in seconds
 def send(message, delay):
-    # Try to send the message otherwise print the exception
+# Try to send the message otherwise print the exception
     try:
         sock.sendto(message.encode(), tello_address)
         print("Sending message: " + message)
@@ -1234,7 +1294,6 @@ def send(message, delay):
 
     # Delay for a user-defined period of time
     time.sleep(delay)
-
 
 # Receive the message from Tello
 def receive():
@@ -1250,27 +1309,28 @@ def receive():
             print("Error receiving: " + str(e))
             break
 
-
+# Deviated from example repo. Added underscores before and after main to allow code to run
 if __name__ == "__main__":
+
     # Create and start a listening thread that runs in the background
     # This utilizes our receive functions and will continuously monitor for incoming messages
     receiveThread = threading.Thread(target=receive)
     receiveThread.daemon = True
     receiveThread.start()
 
-    # sample waypoint list of 10 waypoints
-    #waypoint1 = Waypoint(0, 20, 40, 'D')
-    #waypoint2 = Waypoint(0, -20, 40, 'B')
-    #waypoint3 = Waypoint(10, 10, 40, 'C')
-    #waypoint4 = Waypoint(0, -20, 20, 'A')
-    #waypoint5 = Waypoint(20, 10, 20, 'A')
-    #waypoint6 = Waypoint(10, 90, 40, 'B')
-    #waypoint7 = Waypoint(40, 80, 40, 'C')
-    #waypoint8 = Waypoint(30, 30, 40, 'A')
-    #waypoint9 = Waypoint(50, 40, 70, 'A')
-    #waypoint10 = Waypoint(0, 50, 60, 'D')
+    # Sample waypoint list of 10 waypoints
+    # waypoint1 = Waypoint(0, 20, 40, 'D')
+    # waypoint2 = Waypoint(0, -20, 40, 'B')
+    # waypoint3 = Waypoint(10, 10, 40, 'C')
+    # waypoint4 = Waypoint(0, -20, 20, 'A')
+    # waypoint5 = Waypoint(20, 10, 20, 'A')
+    # waypoint6 = Waypoint(10, 90, 40, 'B')
+    # waypoint7 = Waypoint(40, 80, 40, 'C')
+    # waypoint8 = Waypoint(30, 30, 40, 'A')
+    # waypoint9 = Waypoint(50, 40, 70, 'A')
+    # waypoint10 = Waypoint(0, 50, 60, 'D')
 
-    #waypoints = [waypoint1]
+    # waypoints = [waypoint1]
     # waypoints = [waypoint1, waypoint2]
     # waypoints = [waypoint1, waypoint2, waypoint3]
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4]
@@ -1279,10 +1339,15 @@ if __name__ == "__main__":
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7]
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8]
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9]
-    #waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9, waypoint10]
+    # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9, waypoint10]
+
+    # waypoints = [] # This will contain an array of Waypoint class objects
 
     # Execute the actual algorithm
+    #ex_main_function(waypoints, sock)
     main_function(waypoints, sock)
+
+
 
     # Close the socket
     sock.close()
