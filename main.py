@@ -19,7 +19,7 @@ def main_function(waypoints, sock):
     # https://learn.droneblocks.io/p/tello-drone-programming-with-python/
 
     # Sets delay value after certain commands are sent to tello
-    delay = 5
+    delay = 1
 
     # Run Mission A
     mission_A(delay)
@@ -49,34 +49,22 @@ def mission_A(delay):
     send("command", delay)
 
     # Send the takeoff command
-    send("takeoff", delay)
+    send("takeoff", delay + 5)
 
     # Fly in 4 leaf clover
-    send(
-        "curve " + str(25) + " " + str(40) + " " + str(0) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(60),
-        delay)
-    send("curve " + str(-25) + " " + str(-40) + " " + str(0) + " " + str(0) + " " + str(-90) + " " + str(0) + " " + str(
-        60), delay)
-    send("curve " + str(25) + " " + str(-40) + " " + str(0) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(
-        60), delay)
-    send("curve " + str(-25) + " " + str(40) + " " + str(0) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(
-        60), delay)
-    send(
-        "curve " + str(40) + " " + str(25) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(0) + " " + str(60),
-        5)
-    send("curve " + str(-40) + " " + str(-25) + " " + str(0) + " " + str(-90) + " " + str(0) + " " + str(0) + " " + str(
-        60), delay)
-    send("curve " + str(-40) + " " + str(-25) + " " + str(0) + " " + str(-90) + " " + str(0) + " " + str(0) + " " + str(
-        60), delay)
-    send(
-        "curve " + str(40) + " " + str(25) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(0) + " " + str(60), delay)
+    send("curve " + str(25) + " " + str(40) + " " + str(0) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(60), delay)
+    send("curve " + str(-25) + " " + str(-40) + " " + str(0) + " " + str(0) + " " + str(-90) + " " + str(0) + " " + str(60), delay)
+    send("curve " + str(25) + " " + str(-40) + " " + str(0) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(60), delay)
+    send("curve " + str(-25) + " " + str(40) + " " + str(0) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(60), delay)
+    send("curve " + str(40) + " " + str(25) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(0) + " " + str(60), delay)
+    send("curve " + str(-40) + " " + str(-25) + " " + str(0) + " " + str(-90) + " " + str(0) + " " + str(0) + " " + str(60), delay)
+    send("curve " + str(-40) + " " + str(-25) + " " + str(0) + " " + str(-90) + " " + str(0) + " " + str(0) + " " + str(60), delay)
+    send("curve " + str(40) + " " + str(25) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(0) + " " + str(60), delay)
 
     # Make 4 leaf clover into a flower
     send("right " + str(12.5), delay)
-    send(
-        "curve " + str(15) + " " + str(15) + " " + str(0) + " " + str(0) + " " + str(25) + " " + str(0) + " " + str(60), delay)
-    send("curve " + str(-15) + " " + str(-15) + " " + str(0) + " " + str(0) + " " + str(-25) + " " + str(0) + " " + str(
-        60), delay)
+    send("curve " + str(15) + " " + str(15) + " " + str(0) + " " + str(0) + " " + str(25) + " " + str(0) + " " + str(60), delay)
+    send("curve " + str(-15) + " " + str(-15) + " " + str(0) + " " + str(0) + " " + str(-25) + " " + str(0) + " " + str(60), delay)
     send("left " + str(12.5), delay)
     send("flip " + str("r"), delay)
     send("up " + str(20), delay)
@@ -98,7 +86,7 @@ def mission_A(delay):
 def mission_B(waypoints, delay):
 
     def waypointA():
-        send("stop", delay)
+        send("stop", 5)
 
     def waypointB():
         send("streamon", delay)
@@ -110,19 +98,19 @@ def mission_B(waypoints, delay):
         send("flip " + str('b'), delay)
 
     def waypointD():
-        radius = 78.74  # 2 meters converted into inches
+        radius = 200  # 2 meters converted into inches
         photo_count = 12  # Break circle up into a 12 sided hexagon
         send("forward " + str(radius), delay)  # Fly 2 meters away from waypoint
         send("cw " + str(180), delay)  # face camera towards waypoint
         send("streamon", delay)  # Turn on camera
-        send("right " + str(20.3795), delay)  # Fly right 1/2 of a side of the hexagon
+        send("right " + str(51.76393), delay)  # Fly right 1/2 of a side of the hexagon
         time = 1
         while time < photo_count:  # turn and rotate around waypoint with cemera facing waypoint
             send("ccw " + str(30), delay)
-            send("right " + str(40.759), delay)
+            send("right " + str(103.52786), delay)
             time = time + 1
         send("ccw " + str(30), delay)
-        send("right " + str(20.3795), delay)  # Fly back to where circle started
+        send("right " + str(51.76393), delay)  # Fly back to where circle started
         send("streamoff", delay)  # Turn off camera
         send("forward " + str(radius), delay)  # Fly back to waypoint
         send("cw " + str(180), delay)  # Turn back around
@@ -337,7 +325,7 @@ def mission_B(waypoints, delay):
     send("command", delay)
 
     # Send the takeoff command
-    send("takeoff", delay)
+    send("takeoff", delay + 5)
 
     # Flight plan for 1 waypoints
     if numberofwaypoints == 1:
@@ -1271,18 +1259,18 @@ if __name__ == "__main__":
     receiveThread.start()
 
     # sample waypoint list of 10 waypoints
-    waypoint1 = Waypoint(0, 20, 40, 'A')
-    waypoint2 = Waypoint(0, -20, 40, 'B')
-    waypoint3 = Waypoint(10, 10, 40, 'C')
-    waypoint4 = Waypoint(0, -20, 20, 'A')
-    waypoint5 = Waypoint(20, 10, 20, 'A')
-    waypoint6 = Waypoint(10, 90, 40, 'B')
-    waypoint7 = Waypoint(40, 80, 40, 'C')
-    waypoint8 = Waypoint(30, 30, 40, 'A')
-    waypoint9 = Waypoint(50, 40, 70, 'A')
-    waypoint10 = Waypoint(0, 50, 60, 'D')
+    #waypoint1 = Waypoint(0, 20, 40, 'D')
+    #waypoint2 = Waypoint(0, -20, 40, 'B')
+    #waypoint3 = Waypoint(10, 10, 40, 'C')
+    #waypoint4 = Waypoint(0, -20, 20, 'A')
+    #waypoint5 = Waypoint(20, 10, 20, 'A')
+    #waypoint6 = Waypoint(10, 90, 40, 'B')
+    #waypoint7 = Waypoint(40, 80, 40, 'C')
+    #waypoint8 = Waypoint(30, 30, 40, 'A')
+    #waypoint9 = Waypoint(50, 40, 70, 'A')
+    #waypoint10 = Waypoint(0, 50, 60, 'D')
 
-    # waypoints = [waypoint1]
+    #waypoints = [waypoint1]
     # waypoints = [waypoint1, waypoint2]
     # waypoints = [waypoint1, waypoint2, waypoint3]
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4]
@@ -1291,7 +1279,7 @@ if __name__ == "__main__":
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7]
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8]
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9]
-    waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9, waypoint10]
+    #waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9, waypoint10]
 
     # Execute the actual algorithm
     main_function(waypoints, sock)
