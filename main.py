@@ -1271,16 +1271,16 @@ if __name__ == "__main__":
     receiveThread.start()
 
     # sample waypoint list of 10 waypoints
-    waypoint1 = Waypoint(0, 20, 40, 'A')
-    waypoint2 = Waypoint(0, -20, 40, 'B')
-    waypoint3 = Waypoint(10, 10, 40, 'C')
-    waypoint4 = Waypoint(0, -20, 20, 'A')
-    waypoint5 = Waypoint(20, 10, 20, 'A')
-    waypoint6 = Waypoint(10, 90, 40, 'B')
-    waypoint7 = Waypoint(40, 80, 40, 'C')
-    waypoint8 = Waypoint(30, 30, 40, 'A')
-    waypoint9 = Waypoint(50, 40, 70, 'A')
-    waypoint10 = Waypoint(0, 50, 60, 'D')
+    #waypoint1 = Waypoint(0, 20, 40, 'A')
+    #waypoint2 = Waypoint(0, -20, 40, 'B')
+    #waypoint3 = Waypoint(10, 10, 40, 'C')
+    #waypoint4 = Waypoint(0, -20, 20, 'A')
+    #waypoint5 = Waypoint(20, 10, 20, 'A')
+    #waypoint6 = Waypoint(10, 90, 40, 'B')
+    #waypoint7 = Waypoint(40, 80, 40, 'C')
+    #waypoint8 = Waypoint(30, 30, 40, 'A')
+    #waypoint9 = Waypoint(50, 40, 70, 'A')
+    #waypoint10 = Waypoint(0, 50, 60, 'D')
 
     # waypoints = [waypoint1]
     # waypoints = [waypoint1, waypoint2]
@@ -1291,7 +1291,7 @@ if __name__ == "__main__":
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7]
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8]
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9]
-    waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9, waypoint10]
+    #waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9, waypoint10]
 
     # Execute the actual algorithm
     main_function(waypoints, sock)
