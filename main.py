@@ -51,8 +51,6 @@ def mission_A(delay):
     # Send the takeoff command
     send("takeoff", delay)
 
-    send("stop", delay)
-
     # Fly in 4 leaf clover
     send(
         "curve " + str(25) + " " + str(40) + " " + str(0) + " " + str(0) + " " + str(90) + " " + str(0) + " " + str(60),
@@ -129,7 +127,7 @@ def mission_B(waypoints, delay):
         send("forward " + str(radius), delay)  # Fly back to waypoint
         send("cw " + str(180), delay)  # Turn back around
 
-    ###################Waypoint Legnth We will need to use this value tell us how many points go in our arrey
+    # Waypoint Legnth We will need to use this value tell us how many points go in our arrey
     numberofwaypoints = len(waypoints)
     print(numberofwaypoints)
     # x values for waypoints in order 0 is take off location if statments depending on how many waypoints are posted
@@ -340,9 +338,6 @@ def mission_B(waypoints, delay):
 
     # Send the takeoff command
     send("takeoff", delay)
-
-    # Extra deley to make sure drone is ready for take off
-    send("stop", delay)
 
     # Flight plan for 1 waypoints
     if numberofwaypoints == 1:
