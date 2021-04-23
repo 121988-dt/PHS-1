@@ -20,7 +20,7 @@ def main_function(waypoints, sock):
     # https://learn.droneblocks.io/p/tello-drone-programming-with-python/
 
     # Sets delay value after certain commands are sent to tello
-    delay = 1
+    delay = 5
 
     # Run Mission A
     mission_A(delay)
@@ -1341,7 +1341,7 @@ if __name__ == "__main__":
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9]
     # waypoints = [waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7, waypoint8, waypoint9, waypoint10]
 
-    # waypoints = [] # This will contain an array of Waypoint class objects
+    waypoints = [] # This will contain an array of Waypoint class objects
 
     # Execute the actual algorithm
     #ex_main_function(waypoints, sock)
